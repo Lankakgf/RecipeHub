@@ -32,8 +32,11 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get(
     "DJANGO_ALLOWED_HOSTS",
-    "127.0.0.1,localhost"
+    "*"
 ).split(",")
+
+# Allows forms (login, cart, recipes) to work securely over Render HTTPS
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
 # Application definition
 
