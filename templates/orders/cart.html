@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}My Cart - RecipeHub{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 30px;">
+    <h1>Shopping Cart</h1>
+</div>
+
+{% if cart_items %}
+<div style="background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+            <tr style="border-bottom: 2px solid var(--border);">
+                <th style="padding: 12px;">Item</th>
+                <th style="padding: 12px;">Price</th>
+                <th style="padding: 12px;">Qty</th>
+                <th style="padding: 12px;">Subtotal</th>
+                <th style="padding: 12px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in cart_items %}
+            <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 12px; font-weight: 600;">{{ entry.item.name }}</td>
+                <td style="padding: 12px;">₹{{ entry.item.price }}</td>
+                <td style="padding: 12px;">{{ entry.quantity }}</td>
+                <td style="padding: 12px; font-weight: 600; color: var(--primary);">₹{{ entry.subtotal }}</td>
+                <td style="padding: 12px;">
+                    <a href="{% url 'remove_from_cart' entry.item.id %}" style="color: #e53935; font-size: 0.9rem;">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+        <a href="{% url 'menu' %}" class="btn btn-outline">← Back to Menu</a>
+        <div style="text-align: right;">
+            <h3 style="margin-bottom: 12px;">Total: ₹{{ grand_total }}</h3>
+            <button class="btn" onclick="alert('Order placed successfully!')">Proceed to Checkout</button>
+        </div>
+    </div>
+</div>
+{% else %}
+<div style="text-align: center; padding: 50px 0;">
+    <p style="font-size: 1.2rem; color: var(--muted); margin-bottom: 20px;">Your cart is currently empty.</p>
+    <a href="{% url 'menu' %}" class="btn">Explore Menu</a>
+</div>
+{% endif %}
+{% endblock %}
