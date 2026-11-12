@@ -1,0 +1,136 @@
+
+{% extends 'base.html' %}
+
+{% block title %}RecipeHub | Discover Delicious Recipes{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-label">🍳 YOUR DAILY FOOD INSPIRATION</span>
+
+        <h1>Discover Your Next Favourite Meal</h1>
+
+        <p>
+            Explore delicious recipes, discover new flavours,
+            and share your favourite meals with the world.
+        </p>
+
+        <form method="GET" class="search-form">
+            <input
+                type="text"
+                name="search"
+                value="{{ search|default:'' }}"
+                placeholder="Search for delicious recipes..."
+            >
+            <button type="submit" class="btn">Search Recipes</button>
+        </form>
+    </div>
+</section>
+
+<section class="recipes-section">
+
+    <div class="section-heading">
+        <div>
+            <span class="section-label">FIND YOUR INSPIRATION</span>
+            <h2>Explore Recipes</h2>
+            <p>Something delicious is waiting for you.</p>
+        </div>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'create_recipe' %}" class="btn">
+                + Add Recipe
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn">
+                Login to Add Recipe
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="category-list">
+
+    <a href="{% url 'home' %}?search={{ search|urlencode }}"
+       class="category-pill">
+        All Recipes
+    </a>
+
+    {% for category in categories %}
+        <a href="?search={{ search|urlencode }}&category={{ category.id }}"
+           class="category-pill">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+
+</div>
+    <div class="recipe-grid">
+
+        {% for recipe in recipes %}
+
+            <article class="recipe-card">
+
+                <a href="{% url 'recipe_detail' recipe.pk %}"
+                   class="recipe-image-link">
+
+                    {% if recipe.image %}
+                        <img
+                            src="{{ recipe.image.url }}"
+                            alt="{{ recipe.title }}"
+                            loading="lazy"
+                        >
+                    {% else %}
+                        <div class="recipe-placeholder">
+                            🍽️
+                            <span>No image available</span>
+                        </div>
+                    {% endif %}
+
+                </a>
+
+                <div class="recipe-content">
+
+                    <span class="category-badge">
+                        {{ recipe.category|default:"Other" }}
+                    </span>
+
+                    <h3>{{ recipe.title }}</h3>
+
+                    <p>
+                        {{ recipe.description|truncatewords:15 }}
+                    </p>
+
+                    <div class="recipe-meta">
+                        <span>⏱ {{ recipe.cooking_time }} min</span>
+                        <span>🍽️ {{ recipe.servings }} servings</span>
+                    </div>
+
+                    <a href="{% url 'recipe_detail' recipe.pk %}"
+                       class="btn recipe-button">
+                        View Recipe →
+                    </a>
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="empty-recipes">
+                <div>🍲</div>
+                <h3>No recipes found</h3>
+                <p>Try another search or add your first delicious recipe!</p>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'create_recipe' %}" class="btn">
+                        Add Your First Recipe
+                    </a>
+                {% endif %}
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

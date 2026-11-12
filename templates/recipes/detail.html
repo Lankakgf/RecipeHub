@@ -1,0 +1,95 @@
+
+{% extends 'base.html' %}
+
+{% block title %}{{ recipe.title }} | RecipeHub{% endblock %}
+
+{% block content %}
+
+<div class="py-5">
+
+    <a href="{% url 'home' %}"
+       class="btn btn-outline-secondary mb-4">
+        ← Back
+    </a>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+
+            {% if recipe.image %}
+
+                <img src="{{ recipe.image.url }}"
+                     class="img-fluid rounded-4 shadow"
+                     alt="{{ recipe.title }}">
+
+            {% else %}
+
+                <div class="bg-light rounded-4 p-5 text-center">
+                    No Image Available
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="col-md-6">
+
+            <span class="badge bg-warning text-dark">
+                {{ recipe.category|default:"Other" }}
+            </span>
+
+            <h1 class="fw-bold mt-3">{{ recipe.title }}</h1>
+
+            <p class="text-muted">{{ recipe.description }}</p>
+
+            <p>⏱ {{ recipe.cooking_time }} minutes</p>
+
+            <p>🍽 {{ recipe.servings }} servings</p>
+
+            <p>👨‍🍳 {{ recipe.user.username }}</p>
+
+            {% if user == recipe.user %}
+
+                <a href="{% url 'edit_recipe' recipe.pk %}"
+                   class="btn btn-primary">
+                    Edit
+                </a>
+
+                <a href="{% url 'delete_recipe' recipe.pk %}"
+                   class="btn btn-danger">
+                    Delete
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <hr class="my-5">
+
+    <h2 class="fw-bold">Ingredients</h2>
+
+    <ul class="list-group mt-3">
+
+        {% for item in recipe.ingredients.all %}
+
+            <li class="list-group-item">
+                {{ item.quantity }}
+                {{ item.unit }}
+                {{ item.ingredient.name }}
+            </li>
+
+        {% empty %}
+
+            <li class="list-group-item">
+                No ingredients added yet.
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+</div>
+
+{% endblock %}
