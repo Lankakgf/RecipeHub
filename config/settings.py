@@ -147,3 +147,5 @@ LOGOUT_REDIRECT_URL = "home"
 # Production Static Files (WhiteNoise)
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com', 'https://recipehub-s1y9.onrender.com']
